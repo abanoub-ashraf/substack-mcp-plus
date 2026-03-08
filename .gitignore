@@ -97,6 +97,7 @@ yarn-debug.log*
 yarn-error.log*
 .npm/
 .omx/
+PROGRESS_TRACKER.md
 
 # Testing
 .nyc_output/
