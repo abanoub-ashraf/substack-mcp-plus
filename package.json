@@ -22,12 +22,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ty13r/substack-mcp-plus.git"
+    "url": "https://github.com/abanoub-ashraf/substack-mcp-plus.git"
   },
   "bugs": {
-    "url": "https://github.com/ty13r/substack-mcp-plus/issues"
+    "url": "https://github.com/abanoub-ashraf/substack-mcp-plus/issues"
   },
-  "homepage": "https://github.com/ty13r/substack-mcp-plus#readme",
+  "homepage": "https://github.com/abanoub-ashraf/substack-mcp-plus#readme",
   "keywords": [
     "mcp",
     "mcp-server",
@@ -54,8 +54,8 @@
     "formatting"
   ],
   "author": {
-    "name": "ty13r",
-    "url": "https://github.com/ty13r"
+    "name": "Abanoub Ashraf",
+    "url": "https://github.com/abanoub-ashraf"
   },
   "license": "MIT",
   "engines": {
@@ -91,6 +91,6 @@
   },
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/ty13r"
+    "url": "https://github.com/sponsors/abanoub-ashraf"
   }
 }

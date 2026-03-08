@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "substack-mcp-plus"
-version = "1.0.0"
+version = "1.0.3"
 description = "Unofficial MCP server for Substack with rich text formatting (not affiliated with Substack Inc.)"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
-    {name = "ty13r"}
+    {name = "Abanoub Ashraf"}
 ]
 keywords = ["mcp", "substack", "api", "automation", "publishing"]
 classifiers = [
