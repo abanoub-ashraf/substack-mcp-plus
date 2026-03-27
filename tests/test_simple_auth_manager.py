@@ -110,7 +110,7 @@ class TestSimpleAuthManager:
         assert auth_manager.get_token() is None
 
     def test_token_for_different_publication(self, auth_manager):
-        """Test token for different publication returns None"""
+        """Test token can be reused after publication URL changes"""
         # Store a token
         auth_manager.store_token("test-token", "test@example.com")
 
@@ -121,8 +121,9 @@ class TestSimpleAuthManager:
         auth_data["publication_url"] = "https://different.substack.com"
         auth_manager.auth_file.write_text(json.dumps(auth_data))
 
-        # Should return None (different publication)
-        assert auth_manager.get_token() is None
+        # Session cookies are account-scoped, so publication URL changes should not
+        # strand an otherwise valid token.
+        assert auth_manager.get_token() == "test-token"
 
     def test_file_permissions(self, auth_manager):
         """Test that files are created with secure permissions"""

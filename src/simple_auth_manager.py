@@ -87,10 +87,13 @@ class SimpleAuthManager:
         try:
             auth_data = json.loads(self.auth_file.read_text())
 
-            # Check if it's for the right publication
-            if auth_data.get("publication_url") != self.publication_url:
-                logger.debug("Token is for different publication")
-                return None
+            stored_publication_url = auth_data.get("publication_url")
+            if stored_publication_url != self.publication_url:
+                logger.info(
+                    "Reusing stored session token across publication URL change: %s -> %s",
+                    stored_publication_url,
+                    self.publication_url,
+                )
 
             expires_at = datetime.fromisoformat(auth_data["expires_at"])
 

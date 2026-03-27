@@ -243,7 +243,7 @@ class APIWrapper:
         post_audience: str = "everyone",
         email_audience: str = "everyone",
     ) -> Dict[str, Any]:
-        """Schedule a draft for future publication using Substack's current API."""
+        """Schedule a draft for future publication."""
         try:
             payload = {
                 "trigger_at": trigger_at,
@@ -251,12 +251,27 @@ class APIWrapper:
                 "email_audience": email_audience,
             }
             response = self.client._session.post(
-                f"{self.publication_url}/api/v1/drafts/{post_id}/scheduled_release",
+                f"{self.publication_url}/drafts/{post_id}/scheduled_release",
                 json=payload,
             )
-            return self._handle_response(
-                response.json(), "schedule_draft"
-            )
+            if response.status_code >= 400:
+                raise SubstackAPIError(
+                    f"Schedule failed with status {response.status_code}: {response.text}"
+                )
+
+            if not response.text.strip():
+                return {
+                    "id": str(post_id),
+                    "postSchedules": [
+                        {
+                            "trigger_at": trigger_at,
+                            "post_audience": post_audience,
+                            "email_audience": email_audience,
+                        }
+                    ],
+                }
+
+            return self._handle_response(response.json(), "schedule_draft")
         except Exception as e:
             raise SubstackAPIError(f"Failed to schedule draft: {str(e)}")
 
@@ -264,7 +279,7 @@ class APIWrapper:
         """Remove a scheduled release from a draft."""
         try:
             response = self.client._session.delete(
-                f"{self.publication_url}/api/v1/drafts/{post_id}/scheduled_release"
+                f"{self.publication_url}/drafts/{post_id}/scheduled_release"
             )
             if response.status_code >= 400:
                 raise SubstackAPIError(
