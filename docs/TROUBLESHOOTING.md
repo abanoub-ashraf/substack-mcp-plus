@@ -43,15 +43,21 @@
 - Session token expiration
 
 **Solutions:**
-1. Re-run authentication setup:
+1. If you installed the old unscoped package, reinstall the scoped package:
+   ```bash
+   npm uninstall -g substack-mcp-plus @abanoub-ashraf/substack-mcp-plus
+   npm install -g @abanoub-ashraf/substack-mcp-plus@latest
+   ```
+2. Re-run authentication setup:
    ```bash
    substack-mcp-plus-setup
    ```
-2. Clear cached credentials:
+3. Fully restart your MCP client.
+4. Clear cached credentials only if setup still fails:
    ```bash
    rm -i ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/.key
    ```
-3. Use the same setup browser for CAPTCHA, password, and email-link verification
+5. Use the same setup browser for CAPTCHA, password, and email-link verification
 
 ### 4. Email Sign-In Link Opens in the Wrong Browser
 

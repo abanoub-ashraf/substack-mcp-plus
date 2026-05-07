@@ -23,6 +23,18 @@ If Substack sends an email sign-in link, open or paste that link in the same
 browser window opened by `substack-mcp-plus-setup`. The setup captures the final
 browser cookies after that window reaches a signed-in Substack page.
 
+## 🔄 Existing Users
+
+If you installed the old unscoped package, reinstall the scoped package and rerun setup:
+
+```bash
+npm uninstall -g substack-mcp-plus @abanoub-ashraf/substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus@latest
+substack-mcp-plus-setup
+```
+
+Then fully restart your MCP client.
+
 ## 🔧 Claude Desktop Config
 
 After running setup, add this minimal config to Claude Desktop:

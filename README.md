@@ -59,6 +59,19 @@ substack-mcp-plus
 substack-mcp-plus-setup
 ```
 
+### Migrating From the Old Package
+
+If you previously installed the unscoped `substack-mcp-plus` package, remove it
+before installing the scoped package:
+
+```bash
+npm uninstall -g substack-mcp-plus @abanoub-ashraf/substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus@latest
+substack-mcp-plus-setup
+```
+
+After reinstalling, fully restart your MCP client so it reloads the command.
+
 ## First-Time Setup
 
 Run the setup wizard:
