@@ -16,8 +16,12 @@ substack-mcp-plus-setup
 - ✅ Choice of magic link or password authentication
 - ✅ Browser-based login
 - ✅ CAPTCHA handling
-- ✅ Secure token storage
+- ✅ Encrypted local browser session storage
 - ✅ Automatic configuration
+
+If Substack sends an email sign-in link, open or paste that link in the same
+browser window opened by `substack-mcp-plus-setup`. The setup captures the final
+browser cookies after that window reaches a signed-in Substack page.
 
 ## 🔧 Claude Desktop Config
 
@@ -100,10 +104,11 @@ Upload image from https://picsum.photos/800/400 optimized for web
 
 | Issue | Solution |
 |-------|----------|
-| "No authentication found" | Run `python setup_auth.py` |
+| "No authentication found" | Run `substack-mcp-plus-setup` |
 | CAPTCHA appears | Solve it in the browser window |
-| Token expired | Run `python setup_auth.py` again |
-| Import errors | Make sure you ran `pip install -e .` |
+| Email link opens elsewhere | Copy the link and paste it into the setup browser |
+| Session expired | Run `substack-mcp-plus-setup` again |
+| Import errors | Reinstall with `npm install -g substack-mcp-plus@latest` |
 
 ## 🎯 Pro Tips
 
@@ -138,4 +143,4 @@ export SUBSTACK_PUBLICATION_URL="https://YOUR_PUBLICATION.substack.com"
 
 ---
 
-**Need help?** The authentication system provides clear error messages and guidance. For most issues, running `python setup_auth.py` will solve the problem!
+**Need help?** The authentication system provides clear error messages and guidance. For most issues, running `substack-mcp-plus-setup` will solve the problem!

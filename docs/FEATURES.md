@@ -41,7 +41,7 @@ export SUBSTACK_API_KEY="YOUR_SUBSTACK_API_KEY"
 export SUBSTACK_SECRET="YOUR_SUBSTACK_SECRET"
 
 # Substack MCP Plus:
-python setup_auth.py  # Interactive browser auth - done!
+substack-mcp-plus-setup  # Interactive browser auth - done!
 ```
 
 ### 📝 Unmatched Content Creation

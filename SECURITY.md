@@ -19,14 +19,22 @@ When using Substack MCP Plus, please follow these security best practices:
 - Consider using a secrets management service for production use
 
 ### Authentication
-- **Email/Password Method** (Recommended):
-  - Use a strong, unique password for your Substack account
-  - Enable two-factor authentication on your Substack account if available
+- **Browser Setup Method** (Recommended):
+  - Use `substack-mcp-plus-setup`
+  - Complete CAPTCHA, password, magic-link, or email verification in the setup browser
+  - If Substack emails a sign-in link, paste it into the same setup browser
+  - The tool stores encrypted session cookies, not your Substack password
   
 - **Session Token Method** (Alternative):
   - Session tokens expire and need to be refreshed periodically
   - Never share or expose your session tokens
   - Revoke tokens immediately if compromised
+
+### Local Auth Storage
+- Browser session data is encrypted at `~/.substack-mcp-plus/auth.json`
+- The auth file is written with owner-only permissions (`600`)
+- The auth directory is written with owner-only permissions (`700`)
+- Never commit `auth.json`, `.key`, `.env`, cookies, tokens, or terminal logs that contain secrets
 
 ### API Usage
 - Be mindful of Substack's rate limits
@@ -60,7 +68,8 @@ Please give us reasonable time to address the issue before public disclosure. We
 ### Current Security Measures
 - Environment variable-based credential management
 - No hardcoded secrets in code
-- Secure authentication flow with Substack API
+- Browser-based authentication flow with encrypted local session storage
+- Owner-only permissions for local auth files
 - Input sanitization for content creation
 
 ### Planned Improvements

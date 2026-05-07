@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2026-05-07
+
+### Fixed
+- Browser setup now stores the full authenticated Substack cookie jar after CAPTCHA, password, magic-link, or email-verification flows.
+- Authenticated requests now reuse the stored cookie jar instead of only `substack.sid`, fixing logins that succeeded in the browser but failed later in the MCP server.
+- Auth tests now isolate local storage from the developer machine's real `~/.substack-mcp-plus` auth files.
+- Scheduling regression tests now use future-safe timestamps.
+
+### Security
+- Local auth directory permissions are tightened to owner-only (`700`); auth and key files remain owner-only (`600`).
+- Documentation now names the local auth path and warns users not to commit cookies, keys, tokens, or logs containing secrets.
+
 ## [1.0.3] - 2025-07-08
 
 ### Fixed

@@ -71,7 +71,14 @@ The setup flow will:
 - open a browser
 - let you sign in to Substack
 - handle CAPTCHA/manual login flow
-- store your session locally for later use
+- store an encrypted browser session locally for later use
+
+The local auth file lives at `~/.substack-mcp-plus/auth.json`. The setup stores
+the browser session cookie jar after login, not your Substack password.
+
+If Substack sends an email sign-in link, open or paste that link in the same
+browser window opened by `substack-mcp-plus-setup`. That same-browser step is
+what lets the setup capture the final authenticated session.
 
 If your client later says authentication failed, run the setup again.
 
@@ -232,6 +239,9 @@ Run setup again:
 substack-mcp-plus-setup
 ```
 
+If Substack sent a sign-in email, paste the email link into the same setup
+browser window before closing it.
+
 ### MCP shows connected but tools do not appear
 
 This is usually a client session cache issue.
@@ -283,6 +293,7 @@ node src/index.js
 
 - Do not commit tokens, passwords, or private keys.
 - Prefer interactive setup over hardcoded credentials.
+- Stored browser session data is encrypted under `~/.substack-mcp-plus/`.
 - Use obvious placeholders in configs and examples.
 - Re-run authentication if a stored Substack session expires.
 

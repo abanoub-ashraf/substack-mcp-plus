@@ -33,7 +33,7 @@
 **Solutions:**
 1. Verify your authentication has admin/owner privileges
 2. Check if subscriber count is visible in Substack dashboard
-3. Try re-authenticating with `python setup_auth.py`
+3. Try re-authenticating with `substack-mcp-plus-setup`
 
 ### 3. Authentication Issues
 
@@ -45,15 +45,28 @@
 **Solutions:**
 1. Re-run authentication setup:
    ```bash
-   python setup_auth.py
+   substack-mcp-plus-setup
    ```
 2. Clear cached credentials:
    ```bash
-   rm -rf ~/.substack_mcp/
+   rm -i ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/.key
    ```
-3. Use email/password authentication if session tokens fail
+3. Use the same setup browser for CAPTCHA, password, and email-link verification
 
-### 4. Body Content Formatting Issues
+### 4. Email Sign-In Link Opens in the Wrong Browser
+
+**Symptoms:**
+- Setup reaches "Check your email"
+- You click the email link in your normal browser
+- Setup still reports no authentication or authentication failed
+
+**Solution:**
+1. Copy the sign-in link from the email.
+2. Paste it into the browser window opened by `substack-mcp-plus-setup`.
+3. Wait for the setup browser to show a signed-in Substack page.
+4. Return to the terminal and let setup finish storing the session.
+
+### 5. Body Content Formatting Issues
 
 **Symptoms:**
 - Posts appear but content is missing
@@ -116,7 +129,7 @@ If you see "API returned invalid data format", it usually means:
 
 1. Check the logs for detailed error messages
 2. Ensure you're using the latest version
-3. Report issues at: https://github.com/baba786/substack-mcp-client/issues
+3. Report issues at: https://github.com/abanoub-ashraf/substack-mcp-plus/issues
 4. Include:
    - Error messages
    - Steps to reproduce
@@ -125,7 +138,7 @@ If you see "API returned invalid data format", it usually means:
 ## Quick Fixes
 
 ### "It was working yesterday"
-→ Re-authenticate: `python setup_auth.py`
+→ Re-authenticate: `substack-mcp-plus-setup`
 
 ### "Can't find my post"
 → Use `list_drafts` to see all available posts with IDs
@@ -133,6 +146,6 @@ If you see "API returned invalid data format", it usually means:
 ### "Everything is broken"
 → Clear cache and re-authenticate:
 ```bash
-rm -rf ~/.substack_mcp/
-python setup_auth.py
+rm -i ~/.substack-mcp-plus/auth.json ~/.substack-mcp-plus/.key
+substack-mcp-plus-setup
 ```
