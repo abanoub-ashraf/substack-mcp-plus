@@ -1,3 +1,8 @@
+# ABOUTME: Regression tests for Substack scheduling and scheduled release helpers.
+# ABOUTME: Verifies scheduling payloads, validation, and empty response handling.
+
+from datetime import datetime, timedelta, timezone
+
 import pytest
 from unittest.mock import Mock
 
@@ -19,6 +24,11 @@ def post_handler(mock_client):
 
 @pytest.mark.asyncio
 async def test_schedule_draft_uses_scheduled_release_api(post_handler, mock_client):
+    scheduled_at = (
+        (datetime.now(timezone.utc).replace(microsecond=0) + timedelta(days=30))
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
     mock_client.get_draft.return_value = {
         "id": "draft-123",
         "draft_title": "Probe",
@@ -28,24 +38,24 @@ async def test_schedule_draft_uses_scheduled_release_api(post_handler, mock_clie
     mock_client.schedule_draft.return_value = {
         "id": "draft-123",
         "postSchedules": [
-                {
-                    "id": 1,
-                    "trigger_at": "2026-04-10T09:00:00Z",
-                    "post_audience": "everyone",
-                    "email_audience": "everyone",
-                }
-            ],
-        }
+            {
+                "id": 1,
+                "trigger_at": scheduled_at,
+                "post_audience": "everyone",
+                "email_audience": "everyone",
+            }
+        ],
+    }
 
     result = await post_handler.schedule_draft(
         post_id="draft-123",
-        scheduled_at="2026-04-10T09:00:00Z",
+        scheduled_at=scheduled_at,
     )
 
     assert result["id"] == "draft-123"
     mock_client.schedule_draft.assert_called_once_with(
         post_id="draft-123",
-        trigger_at="2026-04-10T09:00:00Z",
+        trigger_at=scheduled_at,
         post_audience="everyone",
         email_audience="everyone",
     )
