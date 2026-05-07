@@ -58,6 +58,9 @@ env/
 # Configuration files with potential sensitive data
 claude_desktop_config.json
 cursor_config.json
+/.substack-mcp-plus/
+/auth.json
+/.key
 
 # Utility scripts
 cleanup_test_posts.py

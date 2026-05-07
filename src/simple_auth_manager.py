@@ -28,6 +28,7 @@ class SimpleAuthManager:
         # Use a consistent location in user's home directory
         self.config_dir = Path.home() / ".substack-mcp-plus"
         self.config_dir.mkdir(exist_ok=True)
+        os.chmod(self.config_dir, 0o700)
 
         self.auth_file = self.config_dir / "auth.json"
         self.key_file = self.config_dir / ".key"
