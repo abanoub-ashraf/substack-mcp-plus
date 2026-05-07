@@ -45,6 +45,18 @@ class TestSimpleAuthManager:
         retrieved = auth_manager.get_token()
         assert retrieved == test_token
 
+    def test_store_and_retrieve_session_cookies(self, auth_manager):
+        """Test storing and retrieving a complete browser cookie jar"""
+        cookies = {
+            "substack.sid": "dummy-session-value",
+            "substack.lli": "login-state",
+        }
+
+        auth_manager.store_session_cookies(cookies, "test@example.com")
+
+        assert auth_manager.get_token() == "dummy-session-value"
+        assert auth_manager.get_session_cookies() == cookies
+
     def test_clear_token(self, auth_manager):
         """Test clearing stored token"""
         # Store a token first

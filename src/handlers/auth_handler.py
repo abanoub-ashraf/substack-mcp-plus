@@ -55,10 +55,13 @@ class AuthHandler:
         self.publication_name = self._extract_publication_name(self.publication_url)
 
         # Check if we have any valid auth method
-        stored_token = self.auth_manager.get_token()
+        stored_cookies = self.auth_manager.get_session_cookies()
+        has_stored_auth = isinstance(stored_cookies, dict) and bool(
+            stored_cookies.get("substack.sid")
+        )
         has_env_auth = (self.email and self.password) or self.env_session_token
 
-        if not stored_token and not has_env_auth:
+        if not has_stored_auth and not has_env_auth:
             raise ValueError(
                 "No authentication found. Please run 'substack-mcp-plus-setup' to configure authentication, "
                 "or provide SUBSTACK_EMAIL/SUBSTACK_PASSWORD or SUBSTACK_SESSION_TOKEN environment variables."
@@ -125,11 +128,11 @@ class AuthHandler:
                 del self._client_cache[cache_key]
 
         # Try stored token first (from AuthManager)
-        stored_token = self.auth_manager.get_token()
-        if stored_token:
+        stored_cookies = self.auth_manager.get_session_cookies()
+        if isinstance(stored_cookies, dict) and stored_cookies.get("substack.sid"):
             try:
-                logger.info("Authenticating with stored token")
-                client = self._create_session_client(stored_token)
+                logger.info("Authenticating with stored session cookies")
+                client = self._create_cookie_client(stored_cookies)
 
                 # Wrap the client for better error handling
                 wrapped_client = APIWrapper(client)
@@ -216,8 +219,17 @@ class AuthHandler:
         Returns:
             A Substack client configured with session authentication
         """
-        # Create simple cookie format that works
-        cookies = {"substack.sid": session_token}
+        return self._create_cookie_client({"substack.sid": session_token})
+
+    def _create_cookie_client(self, cookies: Dict[str, str]) -> SubstackApi:
+        """Create a client using browser-authenticated cookies.
+
+        Args:
+            cookies: Cookie name/value pairs to use
+
+        Returns:
+            A Substack client configured with cookie authentication
+        """
 
         # Save cookies to temporary file with secure permissions
         fd, cookies_path = tempfile.mkstemp(suffix=".json", text=True)
@@ -275,7 +287,12 @@ class AuthHandler:
         # Try to get token from storage or environment
         token = self.auth_manager.get_token() or self.env_session_token
 
-        if token:
+        cookies = self.auth_manager.get_session_cookies()
+        if isinstance(cookies, dict) and cookies.get("substack.sid"):
+            headers["Cookie"] = "; ".join(
+                f"{name}={value}" for name, value in cookies.items()
+            )
+        elif token:
             headers["Cookie"] = f"substack.sid={token}"
 
         return headers

@@ -3,6 +3,8 @@
 
 import pytest
 import os
+import tempfile
+from pathlib import Path
 from unittest.mock import Mock, patch, AsyncMock
 from src.handlers.auth_handler import AuthHandler
 from src.utils.api_wrapper import APIWrapper
@@ -13,6 +15,14 @@ class TestAuthHandler:
 
     def setup_method(self):
         """Set up test fixtures"""
+        self._temp_home = tempfile.TemporaryDirectory()
+        self._home_patcher = patch(
+            "src.simple_auth_manager.Path.home",
+            return_value=Path(self._temp_home.name),
+        )
+        self._home_patcher.start()
+        AuthHandler._client_cache.clear()
+
         # Clear any existing env vars
         for key in [
             "SUBSTACK_EMAIL",
@@ -22,6 +32,12 @@ class TestAuthHandler:
         ]:
             if key in os.environ:
                 del os.environ[key]
+
+    def teardown_method(self):
+        """Clean up test fixtures"""
+        self._home_patcher.stop()
+        self._temp_home.cleanup()
+        AuthHandler._client_cache.clear()
 
     def test_init_with_email_password(self):
         """Test initialization with email and password"""
@@ -97,7 +113,7 @@ class TestAuthHandler:
                 assert isinstance(client, APIWrapper)
                 mock_api.assert_called_once_with(
                     email="test@example.com",
-                    password="dummy-password-value",
+                    password=handler.password,
                     publication_url="https://test.substack.com",
                 )
 
@@ -157,6 +173,7 @@ class TestAuthHandler:
         # Mock the auth manager to prevent loading real tokens
         with patch("src.handlers.auth_handler.SimpleAuthManager") as mock_auth_manager:
             mock_auth_manager.return_value.get_token.return_value = None
+            mock_auth_manager.return_value.get_session_cookies.return_value = None
 
             # First create the handler with required env vars
             with patch.dict(
@@ -210,6 +227,30 @@ class TestAuthHandler:
             # This would typically create a custom client
             # For now, we'll just verify the method exists
             assert hasattr(handler, "_create_session_client")
+
+    def test_get_headers_with_stored_cookie_jar(self):
+        """Test headers include every stored browser auth cookie"""
+        with patch.dict(
+            os.environ,
+            {
+                "SUBSTACK_SESSION_TOKEN": "test-session-token",
+                "SUBSTACK_PUBLICATION_URL": "https://test.substack.com",
+            },
+        ):
+            handler = AuthHandler()
+            handler.auth_manager.get_session_cookies = Mock(
+                return_value={
+                    "substack.sid": "test-session-token",
+                    "substack.lli": "login-state",
+                }
+            )
+
+            headers = handler.get_headers()
+
+            assert (
+                headers["Cookie"]
+                == "substack.sid=test-session-token; substack.lli=login-state"
+            )
 
     def test_publication_name_extraction(self):
         """Test extracting publication name from URL"""

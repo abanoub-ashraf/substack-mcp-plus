@@ -1,3 +1,6 @@
+# ABOUTME: Extended unit coverage for handlers, converters, and builders.
+# ABOUTME: Exercises safe helper behavior without live Substack API calls.
+
 """Extended safe coverage tests for additional methods."""
 
 import os
@@ -5,6 +8,7 @@ import unittest
 from unittest.mock import Mock, patch, MagicMock, AsyncMock
 import json
 import tempfile
+from pathlib import Path
 from datetime import datetime
 
 # Import the modules we're testing
@@ -113,17 +117,22 @@ class TestSafeCoverageExtended(unittest.TestCase):
 
     def test_auth_handler_header_generation(self):
         """Test auth handler header generation."""
-        with patch.dict(
-            os.environ,
-            {
-                "SUBSTACK_SESSION_TOKEN": "test-token",
-                "SUBSTACK_PUBLICATION_URL": "https://example.substack.com",
-            },
-        ):
-            auth = AuthHandler()
-            headers = auth.get_headers()
-            self.assertIn("Cookie", headers)
-            self.assertIn("substack.sid=test-token", headers["Cookie"])
+        with tempfile.TemporaryDirectory() as temp_home:
+            with patch(
+                "src.simple_auth_manager.Path.home", return_value=Path(temp_home)
+            ):
+                AuthHandler._client_cache.clear()
+                with patch.dict(
+                    os.environ,
+                    {
+                        "SUBSTACK_SESSION_TOKEN": "test-token",
+                        "SUBSTACK_PUBLICATION_URL": "https://example.substack.com",
+                    },
+                ):
+                    auth = AuthHandler()
+                    headers = auth.get_headers()
+                    self.assertIn("Cookie", headers)
+                    self.assertIn("substack.sid=test-token", headers["Cookie"])
 
     def test_image_handler_error_cases(self):
         """Test image handler error handling."""

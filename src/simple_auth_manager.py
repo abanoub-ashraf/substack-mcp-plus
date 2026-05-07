@@ -54,12 +54,37 @@ class SimpleAuthManager:
             email: The email associated with the token
             expires_in_days: Number of days until token expires
         """
+        self.store_session_cookies(
+            {"substack.sid": token}, email, expires_in_days=expires_in_days
+        )
+
+    def store_session_cookies(
+        self, cookies: Dict[str, str], email: str, expires_in_days: int = 30
+    ) -> None:
+        """Store a complete browser-authenticated Substack cookie jar securely.
+
+        Args:
+            cookies: Cookie name/value pairs captured after browser authentication
+            email: The email associated with the cookies
+            expires_in_days: Number of days until cookies expire locally
+        """
+        normalized_cookies = {
+            str(name): str(value)
+            for name, value in cookies.items()
+            if name and value is not None
+        }
+        token = normalized_cookies.get("substack.sid")
+        if not token:
+            raise ValueError("substack.sid cookie is required")
+
         # Encrypt the token
         encrypted_token = self.cipher.encrypt(token.encode())
+        encrypted_cookies = self.cipher.encrypt(json.dumps(normalized_cookies).encode())
 
         # Store auth data
         auth_data = {
             "token": base64.b64encode(encrypted_token).decode(),
+            "cookies": base64.b64encode(encrypted_cookies).decode(),
             "email": email,
             "stored_at": datetime.utcnow().isoformat(),
             "expires_at": (
@@ -74,18 +99,20 @@ class SimpleAuthManager:
 
         logger.info(f"Token stored securely for {email} at {self.publication_url}")
 
-    def get_token(self) -> Optional[str]:
-        """Retrieve the stored token if valid
-
-        Returns:
-            The decrypted token if valid, None otherwise
-        """
+    def _get_valid_auth_data(self) -> Optional[Dict[str, Any]]:
+        """Read stored auth metadata if the local expiry window is still valid."""
         if not self.auth_file.exists():
             logger.debug("No stored token found")
             return None
 
         try:
-            auth_data = json.loads(self.auth_file.read_text())
+            raw_auth_data = json.loads(self.auth_file.read_text())
+            if not isinstance(raw_auth_data, dict):
+                logger.error("Stored authentication data is not a JSON object")
+                return None
+            auth_data: Dict[str, Any] = {
+                str(key): value for key, value in raw_auth_data.items()
+            }
 
             stored_publication_url = auth_data.get("publication_url")
             if stored_publication_url != self.publication_url:
@@ -103,6 +130,23 @@ class SimpleAuthManager:
                 self.clear_token()
                 return None
 
+            return auth_data
+
+        except Exception as e:
+            logger.error(f"Error retrieving token: {e}")
+            return None
+
+    def get_token(self) -> Optional[str]:
+        """Retrieve the stored session token if valid
+
+        Returns:
+            The decrypted token if valid, None otherwise
+        """
+        auth_data = self._get_valid_auth_data()
+        if not auth_data:
+            return None
+
+        try:
             # Decrypt and return token
             encrypted_token = base64.b64decode(auth_data["token"].encode())
             token = self.cipher.decrypt(encrypted_token).decode()
@@ -112,6 +156,33 @@ class SimpleAuthManager:
 
         except Exception as e:
             logger.error(f"Error retrieving token: {e}")
+            return None
+
+    def get_session_cookies(self) -> Optional[Dict[str, str]]:
+        """Retrieve the stored browser cookie jar if valid.
+
+        Returns:
+            Cookie name/value pairs, or None when no valid auth exists
+        """
+        auth_data = self._get_valid_auth_data()
+        if not auth_data:
+            return None
+
+        try:
+            encrypted_cookies = auth_data.get("cookies")
+            if encrypted_cookies:
+                cookie_payload = base64.b64decode(encrypted_cookies.encode())
+                cookies = json.loads(self.cipher.decrypt(cookie_payload).decode())
+                if isinstance(cookies, dict) and cookies.get("substack.sid"):
+                    return {str(name): str(value) for name, value in cookies.items()}
+
+            token = self.get_token()
+            if token:
+                return {"substack.sid": token}
+            return None
+
+        except Exception as e:
+            logger.error(f"Error retrieving session cookies: {e}")
             return None
 
     def clear_token(self) -> None:
