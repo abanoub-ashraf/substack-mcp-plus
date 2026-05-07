@@ -61,12 +61,31 @@ function findPython() {
 // Get the best Python executable
 const pythonCmd = findPython();
 
-// Spawn the Python process
+// Spawn the Python MCP server with explicit stdio pipes so this wrapper can
+// transparently bridge the transport instead of relying on inherited streams.
 const pythonProcess = spawn(pythonCmd, ['-m', 'src.server'], {
-  stdio: 'inherit',
+  stdio: ['pipe', 'pipe', 'pipe'],
   env: { ...process.env },
   cwd: join(__dirname, '..')
 });
+
+process.stdin.on('data', (chunk) => {
+  pythonProcess.stdin.write(chunk);
+});
+
+process.stdin.on('end', () => {
+  pythonProcess.stdin.end();
+});
+
+pythonProcess.stdout.on('data', (chunk) => {
+  process.stdout.write(chunk);
+});
+
+pythonProcess.stderr.on('data', (chunk) => {
+  process.stderr.write(chunk);
+});
+
+process.stdin.resume();
 
 // Handle process termination
 process.on('SIGINT', () => {
@@ -89,7 +108,7 @@ pythonProcess.on('exit', (code, signal) => {
     console.error('\n❌ Python server exited with an error');
     console.error('💡 Common solutions:');
     console.error('   1. Install dependencies: pip install -e .');
-    console.error('   2. Run setup: python setup_auth.py');
+    console.error('   2. Run setup: substack-mcp-plus-setup');
     console.error('   3. Check your Python environment has required packages');
   }
   process.exit(code || 0);

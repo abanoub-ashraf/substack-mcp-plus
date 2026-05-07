@@ -36,15 +36,27 @@ class SubstackMCPServer:
         self._register_handlers()
 
     def _initialize_handlers(self):
-        """Initialize the Substack handlers"""
+        """Initialize handlers that do not require account authentication.
+
+        MCP clients call `tools/list` before any credentials are available to the
+        server process. If we require Substack auth during startup, the server
+        exits before discovery and Codex sees `Tools: (none)`.
+        """
         try:
-            self.auth_handler = AuthHandler()
+            self.auth_handler: Optional[AuthHandler] = None
             self.research_handler = ResearchHandler()
             self.strategy_handler = StrategyHandler()
-            logger.info("Authentication handler initialized")
+            logger.info("Non-auth handlers initialized; auth will be created lazily")
         except Exception as e:
             logger.error(f"Failed to initialize handlers: {e}")
             raise
+
+    async def _get_authenticated_client(self):
+        """Create the auth handler only when an account-bound tool is invoked."""
+        if self.auth_handler is None:
+            self.auth_handler = AuthHandler()
+            logger.info("Authentication handler initialized lazily")
+        return await self.auth_handler.authenticate()
 
     def _register_handlers(self):
         """Register all handlers with the MCP server"""
@@ -796,7 +808,7 @@ class SubstackMCPServer:
                     return [TextContent(type="text", text="\n".join(lines).strip())]
 
                 # Authenticate and get client for account-specific tools
-                client = await self.auth_handler.authenticate()
+                client = await self._get_authenticated_client()
 
                 # Debug: Check if client is wrapped
                 logger.debug(f"Client type after authenticate: {type(client)}")
