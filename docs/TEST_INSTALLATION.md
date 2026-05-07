@@ -4,10 +4,11 @@
 
 ```bash
 # 1. First uninstall any existing version
-npm uninstall -g substack-mcp-plus
+npm uninstall -g @abanoub-ashraf/substack-mcp-plus substack-mcp-plus
 
-# 2. Install from the tarball
-npm install -g ./substack-mcp-plus-1.0.3.tgz
+# 2. Build and install from the tarball
+npm pack
+npm install -g ./abanoub-ashraf-substack-mcp-plus-1.0.5.tgz
 
 # 3. Verify installation
 which substack-mcp-plus
@@ -25,7 +26,7 @@ mkdir -p ~/test-substack-mcp
 cd ~/test-substack-mcp
 
 # 2. Install the package locally
-npm install ../myApps/substack-mcp-plus/substack-mcp-plus-1.0.3.tgz
+npm install ../myApps/substack-mcp-plus/abanoub-ashraf-substack-mcp-plus-1.0.5.tgz
 
 # 3. Run from node_modules
 ./node_modules/.bin/substack-mcp-plus
@@ -53,10 +54,10 @@ python -m src.server
 To revert to the published version:
 ```bash
 # Uninstall test version
-npm uninstall -g substack-mcp-plus
+npm uninstall -g @abanoub-ashraf/substack-mcp-plus
 
 # Install from NPM
-npm install -g substack-mcp-plus@1.0.2
+npm install -g @abanoub-ashraf/substack-mcp-plus@latest
 ```
 
 ## Notes

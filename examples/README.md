@@ -18,7 +18,7 @@ This directory contains examples demonstrating how to use the Substack MCP Plus 
 1. **First Time Setup**:
    ```bash
    # Install the package
-   npm install -g substack-mcp-plus
+   npm install -g @abanoub-ashraf/substack-mcp-plus
    
    # Run authentication setup
    substack-mcp-plus-setup
@@ -51,7 +51,7 @@ For building on top of the MCP server:
 
 ## 💡 Tips
 
-1. **Always authenticate first** - Run `setup_auth.py` before using any tools
+1. **Always authenticate first** - Run `substack-mcp-plus-setup` before using any tools
 2. **Test with drafts** - Create drafts before publishing to production
 3. **Check formatting** - Use `get_post_content` to verify formatting
 4. **Use the right tool** - Each tool has a specific purpose (see main README)

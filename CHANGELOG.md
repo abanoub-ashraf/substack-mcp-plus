@@ -114,7 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Project state awareness checklist
 
 ### Changed
-- Updated all repository URLs to ty13r/substack-mcp-plus
+- Updated repository URLs to abanoub-ashraf/substack-mcp-plus
 - Updated package descriptions to clarify unofficial status
 - Enhanced .gitignore with comprehensive patterns
 - Fixed author information in package metadata

@@ -98,7 +98,7 @@ def amazing():
 
 #### Automatic Everything
 ```bash
-npm install -g substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus
 # That's it! No manual Python setup, no pip install, no virtual env management
 ```
 
@@ -234,7 +234,7 @@ for section in sections:
 ## 🚀 Get Started
 
 ```bash
-npm install -g substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus
 ```
 
 Join hundreds of satisfied users who've made Substack MCP Plus their go-to automation tool!

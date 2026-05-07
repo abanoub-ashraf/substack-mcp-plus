@@ -91,7 +91,7 @@ Since Substack does not provide an official public API, we rely on reverse-engin
 
 If you discover an issue not listed here:
 
-1. Check existing [GitHub Issues](https://github.com/ty13r/substack-mcp-plus/issues)
+1. Check existing [GitHub Issues](https://github.com/abanoub-ashraf/substack-mcp-plus/issues)
 2. Create a new issue using our bug report template
 3. Include:
    - Steps to reproduce
@@ -120,4 +120,4 @@ We're actively working on:
 - Rate limiting implementation
 - Enhanced blockquote and list handling
 
-Track progress in our [GitHub Issues](https://github.com/ty13r/substack-mcp-plus/issues).
+Track progress in our [GitHub Issues](https://github.com/abanoub-ashraf/substack-mcp-plus/issues).

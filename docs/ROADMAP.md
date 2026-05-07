@@ -118,7 +118,7 @@ Our goal is to make Substack MCP Plus the most powerful and reliable automation 
 We welcome contributions of all sizes! Here's how you can help:
 
 ### For Developers
-1. **Pick an issue** from our [GitHub Issues](https://github.com/ty13r/substack-mcp-plus/issues)
+1. **Pick an issue** from our [GitHub Issues](https://github.com/abanoub-ashraf/substack-mcp-plus/issues)
 2. **Comment** on the issue to claim it
 3. **Fork** the repository
 4. **Create** a feature branch
@@ -167,4 +167,4 @@ This project exists because of contributors like you. Whether you're fixing a ty
 
 ---
 
-*Have ideas not listed here? Open a [discussion](https://github.com/ty13r/substack-mcp-plus/discussions) and let's talk!*
+*Have ideas not listed here? Open a [discussion](https://github.com/abanoub-ashraf/substack-mcp-plus/discussions) and let's talk!*

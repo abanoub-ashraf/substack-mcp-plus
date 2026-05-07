@@ -6,7 +6,7 @@ Get up and running with Substack MCP Plus in under 2 minutes!
 
 ```bash
 # Install globally via NPM
-npm install -g substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus
 
 # Run the authentication setup wizard  
 substack-mcp-plus-setup
@@ -108,7 +108,7 @@ Upload image from https://picsum.photos/800/400 optimized for web
 | CAPTCHA appears | Solve it in the browser window |
 | Email link opens elsewhere | Copy the link and paste it into the setup browser |
 | Session expired | Run `substack-mcp-plus-setup` again |
-| Import errors | Reinstall with `npm install -g substack-mcp-plus@latest` |
+| Import errors | Reinstall with `npm install -g @abanoub-ashraf/substack-mcp-plus@latest` |
 
 ## 🎯 Pro Tips
 

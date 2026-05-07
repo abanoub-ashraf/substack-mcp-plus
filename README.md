@@ -49,7 +49,7 @@ For strategy:
 Install globally with npm:
 
 ```bash
-npm install -g substack-mcp-plus
+npm install -g @abanoub-ashraf/substack-mcp-plus
 ```
 
 This installs two commands:

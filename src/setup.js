@@ -25,7 +25,7 @@ const setupProcess = spawn(venvPython, [setupScript], {
 
 setupProcess.on('error', (err) => {
   console.error('❌ Failed to start setup:', err.message);
-  console.error('💡 Try reinstalling with: npm install -g substack-mcp-plus@latest');
+  console.error('💡 Try reinstalling with: npm install -g @abanoub-ashraf/substack-mcp-plus@latest');
   console.error('💡 Local development fallback: ./venv/bin/python setup_auth.py');
   process.exit(1);
 });
