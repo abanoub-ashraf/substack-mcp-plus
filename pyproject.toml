@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "substack-mcp-plus"
-version = "1.0.4"
+version = "1.0.5"
 description = "Unofficial MCP server for Substack with rich text formatting (not affiliated with Substack Inc.)"
 requires-python = ">=3.10"
 license = {text = "MIT"}
